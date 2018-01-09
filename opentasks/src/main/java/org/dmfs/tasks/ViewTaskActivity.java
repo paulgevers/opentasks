@@ -23,6 +23,7 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import android.view.Window;
@@ -31,6 +32,8 @@ import android.view.WindowManager;
 import org.dmfs.android.bolts.color.Color;
 import org.dmfs.tasks.model.ContentSet;
 import org.dmfs.tasks.utils.BaseActivity;
+
+import static org.dmfs.optional.Absent.absent;
 
 
 /**
@@ -65,7 +68,7 @@ public class ViewTaskActivity extends BaseActivity implements ViewTaskFragment.C
 
         if (savedInstanceState == null)
         {
-            ViewTaskFragment fragment = ViewTaskFragment.newInstance(getIntent().getData());
+            ViewTaskFragment fragment = ViewTaskFragment.newInstance(getIntent().getData(), absent());
             getSupportFragmentManager().beginTransaction().add(R.id.task_detail_container, fragment).commit();
         }
     }
@@ -124,7 +127,7 @@ public class ViewTaskActivity extends BaseActivity implements ViewTaskFragment.C
 
 
     @Override
-    public void onDelete(Uri taskUri)
+    public void onDelete()
     {
         /*
          * The task we're showing has been deleted, just finish.
@@ -145,7 +148,7 @@ public class ViewTaskActivity extends BaseActivity implements ViewTaskFragment.C
 
     @SuppressLint("NewApi")
     @Override
-    public void updateColor(Color color)
+    public void updateColor(@NonNull Color color)
     {
 
         if (VERSION.SDK_INT >= 21)
