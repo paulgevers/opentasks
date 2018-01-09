@@ -76,4 +76,6 @@ dependencies {
     androidTestImplementation('com.android.support.test:rules:' + ANDROID_TEST_RUNNER_VERSION) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+
+    implementation 'com.github.lemonboston:android-investigator:1.0.0'
 }

@@ -18,12 +18,20 @@ package org.dmfs.tasks;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.dmfs.android.bolts.color.colors.AttributeColor;
+import org.dmfs.android.bolts.color.Color;
+import org.dmfs.android.bolts.color.colors.PrimaryColor;
 import org.dmfs.android.retentionmagic.SupportFragment;
+import org.dmfs.optional.Optional;
+import org.dmfs.tasks.utils.bundle.OptionalColorArg;
+
+import gk.android.investigator.Investigator;
+
+import static org.dmfs.tasks.LogUtil.descOptColor;
 
 
 /**
@@ -34,11 +42,41 @@ import org.dmfs.android.retentionmagic.SupportFragment;
  */
 public class EmptyTaskFragment extends SupportFragment
 {
+    private static final String ARG_COLOR_HINT = "color_hint";
+
+    private Color mColor;
+
+
+    public EmptyTaskFragment()
+    {
+        Investigator.log(this);
+    }
+
+
+    /**
+     * @param colorHint
+     *         color that the toolbars should take. If absent, fallback value is the primary color.
+     */
+    public static Fragment newInstance(Optional<Color> colorHint)
+    {
+        EmptyTaskFragment fragment = new EmptyTaskFragment();
+        if (colorHint.isPresent())
+        {
+            Bundle args = new Bundle();
+            args.putInt(ARG_COLOR_HINT, colorHint.value().argb());
+            fragment.setArguments(args);
+        }
+        Investigator.log(EmptyTaskFragment.class, "color", descOptColor(colorHint), "fragment", fragment);
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.opentasks_fragment_empty_task, container, false);
+        View view = inflater.inflate(R.layout.opentasks_fragment_empty_task, container, false);
+        view.findViewById(R.id.empty_task_fragment_appbar).setBackgroundColor(mColor.argb());
+        return view;
     }
 
 
@@ -46,10 +84,11 @@ public class EmptyTaskFragment extends SupportFragment
     public void onAttach(Activity activity)
     {
         super.onAttach(activity);
+
+        mColor = new OptionalColorArg(ARG_COLOR_HINT, getArguments()).value(new PrimaryColor(getContext()));
         if (activity instanceof ViewTaskFragment.Callback)
         {
-            ((ViewTaskFragment.Callback) activity)
-                    .updateColor(new AttributeColor(getContext(), R.attr.colorPrimary));
+            ((ViewTaskFragment.Callback) activity).updateColor(mColor);
         }
     }
 }
