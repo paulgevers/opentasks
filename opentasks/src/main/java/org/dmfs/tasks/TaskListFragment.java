@@ -193,12 +193,12 @@ public class TaskListFragment extends SupportFragment
          *
          * @param taskUri
          *         The {@link Uri} of the selected task.
-         * @param taskColor
-         *         the color of the task
+         * @param taskListColor
+         *         the color of the task list (used for toolbars)
          * @param forceReload
          *         Whether to reload the task or not.
          */
-        void onItemSelected(@NonNull Uri taskUri, @NonNull Color taskColor, boolean forceReload, int pagePosition);
+        void onItemSelected(@NonNull Uri taskUri, @NonNull Color taskListColor, boolean forceReload, int pagePosition);
 
         /**
          * Called when an item has been removed (i.e. the task has been deleted).
@@ -509,10 +509,8 @@ public class TaskListFragment extends SupportFragment
 
             // TODO For now we get the id of the task, not the instance, once we support recurrence we'll have to change that, use instance URI that time
             Uri taskUri = ContentUris.withAppendedId(Tasks.getContentUri(mAuthority), (long) TaskFieldAdapters.TASK_ID.get(cursor));
-            // TODO Should we use TASK_COLOR? (That's not in the projection.)
-            Color taskColor = new ValueColor(TaskFieldAdapters.LIST_COLOR.get(cursor));
-
-            mCallbacks.onItemSelected(taskUri, taskColor, force, mInstancePosition);
+            Color taskListColor = new ValueColor(TaskFieldAdapters.LIST_COLOR.get(cursor));
+            mCallbacks.onItemSelected(taskUri, taskListColor, force, mInstancePosition);
         }
     }
 
