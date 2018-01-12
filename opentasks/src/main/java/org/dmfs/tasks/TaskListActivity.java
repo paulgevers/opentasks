@@ -65,7 +65,6 @@ import org.dmfs.tasks.utils.BaseActivity;
 import org.dmfs.tasks.utils.ExpandableGroupDescriptor;
 import org.dmfs.tasks.utils.SearchHistoryHelper;
 import org.dmfs.tasks.utils.Unchecked;
-import org.dmfs.tasks.utils.colors.OptionalNonTransparentIntColor;
 
 
 /**
@@ -189,8 +188,12 @@ public class TaskListActivity extends BaseActivity implements TaskListFragment.C
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        // If there is no saved color, use the primary color
-        mLastUsedColor = new OptionalNonTransparentIntColor(mLastUsedColor).value(new PrimaryColor(this)).argb();
+
+        if (mLastUsedColor == android.graphics.Color.TRANSPARENT)
+        {
+            // no saved color, use the primary color
+            mLastUsedColor = new PrimaryColor(this).argb();
+        }
 
         // check for single pane activity change
         mTwoPane = getResources().getBoolean(R.bool.has_two_panes);
